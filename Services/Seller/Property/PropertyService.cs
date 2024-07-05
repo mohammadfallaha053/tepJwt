@@ -17,11 +17,12 @@ public class PropertyService : IPropertyService
     public async Task<IEnumerable<PropertyDto>> GetAllPropertiesAsync()
     {
         var properties = await _context.Properties.ToListAsync();
+
         var propertyDtos = new List<PropertyDto>();
 
         foreach (var property in properties)
         {
-            var mainImage = _context.Files.FirstOrDefault(f => f.EntityId == property.Id.ToString() && f.EntityType == "Property");
+            //var mainImage = _context.Files.FirstOrDefault(f => f.EntityId == property.Id.ToString() && f.EntityType == "Property");
 
             propertyDtos.Add(new PropertyDto
             {
@@ -29,7 +30,7 @@ public class PropertyService : IPropertyService
                 Name = property.Name,
                 Price = property.Price,
                 Description = property.Description,
-                MainImageUrl = mainImage != null ? $"/uploads/{mainImage.FileName}" : null
+                
             });
         }
 
@@ -44,14 +45,13 @@ public class PropertyService : IPropertyService
             return null;
         }
 
-        var propertyImages = _context.Files.Where(f => f.EntityId == property.Id.ToString() && f.EntityType == "Property").ToList();
+       // var propertyImages = _context.Files.Where(f => f.EntityId == property.Id.ToString() && f.EntityType == "Property").ToList();
         var propertyDto = new PropertyDto
         {
             Id = property.Id,
             Name = property.Name,
             Price = property.Price,
             Description = property.Description,
-            MainImageUrl = propertyImages.Any() ? $"/uploads/{propertyImages.First().FileName}" : null
         };
 
         return propertyDto;

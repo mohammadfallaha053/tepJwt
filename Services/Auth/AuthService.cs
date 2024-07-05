@@ -27,7 +27,6 @@ public class AuthService : IAuthService
 
 
 
-
     public async Task<AuthDto> RegisterAsync(Register model)
     {
 
@@ -48,8 +47,10 @@ public class AuthService : IAuthService
         {
             UserName = model.Username,
             Email = model.Email,
-            FirstName = model.FirstName,
-            LastName = model.LastName
+            FullName = model.FullName,
+            PhoneNumber=model.PhoneNumber,
+            ImageUrl="pathUrl/AsSoonAs"
+            
         };
 
 
@@ -82,7 +83,10 @@ public class AuthService : IAuthService
             IsAuthenticated = true,
             Roles = new List<string> { model.Role },
             Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-            Username = user.UserName
+            Username = user.UserName,
+            PhoneNumber = user.PhoneNumber,
+            ImageUrl = user.ImageUrl,
+            
         };
     }
 
@@ -110,6 +114,7 @@ public class AuthService : IAuthService
 
         var jwtSecurityToken = await CreateJwtToken(user);
         var rolesList = await _userManager.GetRolesAsync(user);
+
         authModel.Id = user.Id;
         authModel.IsAuthenticated = true;
         authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
@@ -117,7 +122,8 @@ public class AuthService : IAuthService
         authModel.Username = user.UserName;
         authModel.ExpiresOn = jwtSecurityToken.ValidTo;
         authModel.Roles = rolesList.ToList();
-
+        authModel.ImageUrl = user.ImageUrl;
+        authModel.PhoneNumber = user.PhoneNumber;
         return authModel;
     }
 

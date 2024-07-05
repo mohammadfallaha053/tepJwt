@@ -4,6 +4,7 @@ using JWT53.Dto.User;
 using JWT53.Models;
 using JWT53.Services.Common;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
@@ -13,69 +14,26 @@ namespace JWT53.Services.User;
 
 public class UserService: IUserService
 {
+    private readonly long _maxImageSize = 2 * 1024 * 1024; // 2 ميجابايت
+    private readonly List<string> _allowedImageExtensions = new List<string> { ".jpg", ".png", ".svg", ".jpeg" };
+
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ApplicationDbContext _context;
     private readonly IWebHostEnvironment _environment;
-    private readonly IFileService _fileService;
 
-    public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context, IWebHostEnvironment environment, IFileService fileService)
+    public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context, IWebHostEnvironment environment)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _context = context;
         _environment = environment;
-        _fileService = fileService;
-    }
-
-    public async Task<IEnumerable<UserDto>> GetAllUsersWithImagesAsync()
-    {
-        var users = await _userManager.Users.ToListAsync();
-        var userDtos = new List<UserDto>();
-
-        foreach (var user in users)
-        {
-            var files = await _fileService.GetFilesForEntityAsync("User", user.Id);
-            var profileImages = files.Select(f => new FileDto { FileName = f.FileName, FilePath = f.FilePath }).ToList();
-
-            userDtos.Add(new UserDto
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-               ProfileImages = profileImages
-            });
-        }
-
-        return userDtos;
     }
 
 
-    
-    public async Task<UserDto> GetUserWithImageAsync(string userId)
-    {
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user == null)
-        {
-            return null;
-        }
+   
 
-        var files = await _fileService.GetFilesForEntityAsync("User", userId);
-        var profileImages = files.Select(f => new FileDto { FileName = f.FileName, FilePath = f.FilePath }).ToList();
-
-        return new UserDto
-        {
-            Id = user.Id,
-            UserName = user.UserName,
-            Email = user.Email,
-            ProfileImages = profileImages
-        };
-    }
-
-
-
-
-    public async Task AddUserImageAsync(string userId, IFormFile imageFile)
+    public async Task<UserDto> UpdateUserProfileImageAsync(string userId, IFormFile file)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
@@ -83,19 +41,65 @@ public class UserService: IUserService
             throw new Exception("User not found");
         }
 
-        var allowedExtensions = new[] { ".png", ".jpg", ".jpeg" };
-
-        var fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
-        if (!allowedExtensions.Contains(fileExtension))
+        // Check for existing image and delete it
+        if (!string.IsNullOrEmpty(user.ImageUrl))
         {
-            throw new Exception("Invalid file type. Only SVG,PNG,JPG are  allowed.");
+            var oldImagePath = Path.Combine("uploads", user.ImageUrl);
+            if (File.Exists(oldImagePath))
+            {
+                File.Delete(oldImagePath);
+            }
         }
 
+        // Save new image
+        var fileExtension = Path.GetExtension(file.FileName).ToLower();
+        if (!_allowedImageExtensions.Contains(fileExtension) || file.Length > _maxImageSize)
+        {
+            throw new Exception("Invalid file type or size.");
+        }
 
-        await _fileService.SaveFilesAsync(new List<IFormFile> { imageFile }, "User", userId);
+        var fileName = $"{Guid.NewGuid()}{fileExtension}";
+        var filePath = Path.Combine("uploads", fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        // Update user's ImageUrl
+        user.ImageUrl = fileName;
+        await _userManager.UpdateAsync(user);
+
+        return new UserDto
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            Email = user.Email,
+            ImageUrl = user.ImageUrl,
+            PhoneNumber=user.PhoneNumber
+        };
     }
 
 
+
+
+    public async Task<int> GetTotalUsersCountAsync()
+    {
+        return await _userManager.Users.CountAsync();
+    }
+
+
+    public async Task<int> GetUsersCountByRoleAsync(string roleName)
+    {
+        var role = await _roleManager.FindByNameAsync(roleName);
+        if (role == null)
+        {
+            throw new Exception($"Role '{roleName}' not found.");
+        }
+
+        var usersInRole = await _userManager.GetUsersInRoleAsync(roleName);
+        return usersInRole.Count;
+    }
 
 
 
@@ -133,14 +137,7 @@ public class UserService: IUserService
 
 
 
-    //public async Task<IdentityResult> DeleteUserAsync(string userId)
-    //{
-    //    var user = await _userManager.FindByIdAsync(userId);
-    //    if (user == null || user.UserName.ToLower() == "admin")
-    //        return IdentityResult.Failed(new IdentityError { Description = "Cannot delete admin or user not found" });
 
-    //    return await _userManager.DeleteAsync(user);
-    //}
 
 
     public async Task<IdentityResult> DeleteUserAsync(string userId)
@@ -149,15 +146,19 @@ public class UserService: IUserService
         if (user == null || user.UserName.ToLower() == "admin")
             return IdentityResult.Failed(new IdentityError { Description = "Cannot delete admin or user not found" });
 
-        // حذف الصور المرتبطة بالمستخدم
-        var files = await _fileService.GetFilesForEntityAsync("User", userId);
-        foreach (var file in files)
+        // Delete user image if exists
+        if (!string.IsNullOrEmpty(user.ImageUrl))
         {
-            await _fileService.DeleteFileAsync(file.Id);
+            var imagePath = Path.Combine("uploads", user.ImageUrl);
+            if (File.Exists(imagePath))
+            {
+                File.Delete(imagePath);
+            }
         }
 
         return await _userManager.DeleteAsync(user);
     }
+
 
     public async Task ChangePasswordAsync(string userId, string currentPassword, string newPassword)
     {
@@ -173,11 +174,4 @@ public class UserService: IUserService
             throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
         }
     }
-
-
- 
-
-    
-
-
 }

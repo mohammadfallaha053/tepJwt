@@ -8,14 +8,15 @@ public interface IUserService
 
 
 
-    Task<UserDto> GetUserWithImageAsync(string userId);
+    Task<int> GetUsersCountByRoleAsync(string roleName);
+
+    Task<int> GetTotalUsersCountAsync();
 
     Task<IdentityResult> DeleteUserAsync(string userId);
 
-    Task<IEnumerable<UserDto>> GetAllUsersWithImagesAsync();
 
-    Task AddUserImageAsync(string userId, IFormFile imageFile);
 
+    Task<UserDto> UpdateUserProfileImageAsync(string userId, IFormFile file);
 
 
 

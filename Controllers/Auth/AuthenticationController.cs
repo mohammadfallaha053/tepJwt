@@ -27,15 +27,7 @@ namespace JWT53.Controllers.Auth
             if (!result.IsAuthenticated)
                 return BadRequest(result.Message);
 
-            return Ok(new
-            {
-                token = result.Token,
-                expiersOn = result.ExpiresOn,
-                userName = result.Username,
-                email = result.Email,
-                roles = result.Roles,
-
-            });
+            return Ok(result);
         }
 
         [HttpPost("login")]

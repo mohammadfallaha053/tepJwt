@@ -30,49 +30,50 @@ namespace JWT53.Controllers.User
         }
 
 
-        
-       // [Authorize]
-        [HttpPost("{userId}/upload-image")]
-        public async Task<IActionResult> UploadUserImage(string userId, IFormFile imageFile)
+
+        //[Authorize]
+        [HttpPost("user/{userId}/upload-image")]
+        public async Task<IActionResult> UploadUserProfileImage(string userId, IFormFile file)
         {
             try
             {
-                await _userService.AddUserImageAsync(userId, imageFile);
-                return Ok("The image has been added successfully!");
+                await _userService.UpdateUserProfileImageAsync(userId, file);
+                return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
-
         }
 
 
         //[Authorize(Roles = "Admin")]
-        [HttpGet("get-all-users")]
-        public async Task<IActionResult> GetAllUsersWithImages()
+        [HttpGet("user/count/total")]
+        public async Task<IActionResult> GetTotalUsersCount()
         {
-            var users = await _userService.GetAllUsersWithImagesAsync();
-            return Ok(users);
+            var count = await _userService.GetTotalUsersCountAsync();
+            return Ok(new { totalUsers = count });
         }
 
-
-        [HttpGet("User/{userId}")]
-        public async Task<IActionResult> GetUserWithImage(string userId)
+        [HttpGet("user/count/by-role")]
+        public async Task<IActionResult> GetUsersCountByRole([FromQuery] string roleName)
         {
             try
             {
-                var user = await _userService.GetUserWithImageAsync(userId);
-                return Ok(user);
+                var count = await _userService.GetUsersCountByRoleAsync(roleName);
+                return Ok(new { roleName = roleName, count = count });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message });
             }
         }
 
 
-       // [Authorize(Roles = "Admin")]
+
+
+
+        // [Authorize(Roles = "Admin")]
         [HttpDelete("admin/DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -94,8 +95,8 @@ namespace JWT53.Controllers.User
                 return NotFound();
             }
 
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
+            user.PhoneNumber=model.PhoneNumber;
+            user.FullName=model.FullName;
 
 
             var result = await _userManager.UpdateAsync(user);
