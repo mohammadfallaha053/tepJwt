@@ -48,14 +48,14 @@ namespace JWT53.Controllers.User
 
 
         //[Authorize(Roles = "Admin")]
-        [HttpGet("user/count/total")]
+        [HttpGet("admin/count/total")]
         public async Task<IActionResult> GetTotalUsersCount()
         {
             var count = await _userService.GetTotalUsersCountAsync();
             return Ok(new { totalUsers = count });
         }
 
-        [HttpGet("user/count/by-role")]
+        [HttpGet("admin/count/by-role")]
         public async Task<IActionResult> GetUsersCountByRole([FromQuery] string roleName)
         {
             try

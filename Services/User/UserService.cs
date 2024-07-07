@@ -143,7 +143,7 @@ public class UserService: IUserService
     public async Task<IdentityResult> DeleteUserAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        if (user == null || user.UserName.ToLower() == "admin")
+         if (user == null || user.UserName.ToLower() == "admin")
             return IdentityResult.Failed(new IdentityError { Description = "Cannot delete admin or user not found" });
 
         // Delete user image if exists

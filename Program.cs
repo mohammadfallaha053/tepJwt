@@ -12,23 +12,39 @@ using JWT53.Models;
 using JWT53.Services.Auth;
 using JWT53.Services.Admin;
 using JWT53.Services;
-using JWT53.Services.Seller.Property;
 using JWT53.Services.User;
 using JWT53.Services.Common;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using JWT53;
+using JWT53.Services.seller;
+using JWT53.Services.Property;
+using JWT53.Services.Buyer;
+using System.Text.Json.Serialization;
+using JWT53.Services.Categories;
+using JWT53.Services.Cities;
+using JWT53.Services.Citeis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddScoped<IBuyerService, BuyerService>();
+builder.Services.AddScoped<ISellerService, SellerService>();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICityService,CityService>();
 builder.Services.AddCors();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
 
 
 builder.Services.Configure<FormOptions>(options =>
@@ -150,11 +166,11 @@ app.UseHttpsRedirection();
 app.UseSwagger();
     app.UseSwaggerUI();
 //}
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
-    RequestPath = "/uploads"
-});
+//app.UseStaticFiles(new StaticFileOptions
+//{
+//    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+//    RequestPath = "/uploads"
+//});
 app.UseHttpsRedirection();
 
 

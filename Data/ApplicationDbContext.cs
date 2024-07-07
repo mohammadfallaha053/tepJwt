@@ -12,6 +12,9 @@ namespace JWT53.Data
         {
         }
 
+        public DbSet<City> Cities { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
 
         public DbSet<Property> Properties { get; set; }
 

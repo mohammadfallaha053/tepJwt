@@ -103,7 +103,7 @@ public class AuthService : IAuthService
     {
         var authModel = new AuthDto();
 
-        var user = await _userManager.FindByNameAsync(model.Username);
+        var user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
         {

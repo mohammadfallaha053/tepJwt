@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JWT53.Controllers.Role;
 
-[Authorize(Roles = "admin")]
+//[Authorize(Roles = "admin")]
 [Route("api/admin")]
 [ApiController]
 

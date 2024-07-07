@@ -4,6 +4,7 @@ using JWT53.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JWT53.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240706012732_addEditCityandCategoryTable")]
+    partial class addEditCityandCategoryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -235,12 +238,6 @@ namespace JWT53.Migrations
                     b.Property<bool>("IsShowInMainPage")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Lat")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Long")
-                        .HasColumnType("float");
-
                     b.Property<string>("Name_Ar")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -264,10 +261,6 @@ namespace JWT53.Migrations
 
                     b.Property<int>("PropertyType")
                         .HasColumnType("int");
-
-                    b.Property<string>("StreetName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
