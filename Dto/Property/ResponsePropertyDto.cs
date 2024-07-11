@@ -28,7 +28,7 @@ public class ResponsePropertyDto : BasePropertyDto
     public ICollection<MyFileDto> Files { get; set;}
 
 
-    public string UserId { get; set; }
+
 
 
 }

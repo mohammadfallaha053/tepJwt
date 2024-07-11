@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JWT53.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -192,8 +192,7 @@ namespace JWT53.Migrations
                 name: "Properties",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name_Ar = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name_En = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name_Ku = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -224,7 +223,7 @@ namespace JWT53.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Properties_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -251,7 +250,7 @@ namespace JWT53.Migrations
                     EntityType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EntityId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PropertyId = table.Column<int>(type: "int", nullable: true)
+                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {

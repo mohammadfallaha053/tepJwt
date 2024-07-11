@@ -16,9 +16,9 @@ public class Property
     public int Area { get; set; }
     public decimal Price { get; set; }
     public decimal DiscountedPrice { get; set; }
-    public bool IsActive { get; set; }
-    public bool IsShowInMainPage { get; set; }
-    public bool IsShowInAdPage { get; set; }
+    public bool IsActive { get; set; }=false;
+    public bool IsShowInMainPage { get; set; } = false;
+    public bool IsShowInAdPage { get; set; } = false;
     public PropertyType PropertyType { get; set; } // تحديث إلى enum
 
     public Double Lat {  get; set; }
@@ -36,7 +36,7 @@ public class Property
     public City City { get; set; }
 
 
-    public Guid UserId { get; set; }
+    public string UserId { get; set; }
     public ApplicationUser User { get; set; }
 
 

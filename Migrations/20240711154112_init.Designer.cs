@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JWT53.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240708213323_Init")]
-    partial class Init
+    [Migration("20240711154112_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -185,8 +185,8 @@ namespace JWT53.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PropertyId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -197,11 +197,9 @@ namespace JWT53.Migrations
 
             modelBuilder.Entity("JWT53.Models.Property", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Area")
                         .HasColumnType("int");

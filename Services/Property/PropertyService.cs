@@ -18,10 +18,10 @@ public class PropertyService : IPropertyService
         _context = context;
     }
 
-    public async Task AddPropertyAsync(CreatePropertyDto createPropertyDto, Guid userId)
+    public async Task AddPropertyAsync(CreatePropertyDto createPropertyDto, string userId)
     {
         var property = new Property
-        {
+        {   Id = Guid.NewGuid(),
             Name_Ar = createPropertyDto.Name_Ar,
             Name_En = createPropertyDto.Name_En,
             Name_Ku = createPropertyDto.Name_Ku,

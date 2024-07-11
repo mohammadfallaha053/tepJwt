@@ -6,7 +6,7 @@ public interface IPropertyService
 {
     Task<ResponsePropertyDto> GetPropertyByIdAsync(Guid id);
     Task<IEnumerable<ResponsePropertyDto>> GetAllPropertiesAsync();
-    Task AddPropertyAsync(CreatePropertyDto createPropertyDto, Guid userId);
+    Task AddPropertyAsync(CreatePropertyDto createPropertyDto, string userId);
     Task UpdatePropertyAsync(Guid propertyId, UpdatePropertyDto dto);
     Task DeletePropertyAsync(Guid id);
 }
