@@ -2,11 +2,11 @@
 
 namespace JWT53.Dto.City;
 
-public class RsponseCityDto:BaseCityDto
+public class ResponseCityDto:BaseCityDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
    
-    public string CityImageUrl { get; set; }
+    public string ImageUrl { get; set; }
 
     // Navigation property
    // public ICollection<ResponsePropertyDto> Properties { get; set; }

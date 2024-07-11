@@ -1,4 +1,5 @@
-﻿using JWT53.Data;
+﻿using AutoMapper;
+using JWT53.Data;
 using JWT53.Dto.City;
 using JWT53.Dto.Property;
 using JWT53.Models;
@@ -10,82 +11,48 @@ namespace JWT53.Services.Citeis;
 
 public class CityService : ICityService
 {
-
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CityService(ApplicationDbContext context)
+    public CityService(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<IEnumerable<RsponseCityDto>> GetAllCitiesAsync()
+    public async Task<ResponseCityDto> AddCityAsync(CreateCityDto cityDto)
     {
-        return await _context.Cities
-            .Select(city => new RsponseCityDto
-            {
-                Id = city.Id,
-                Name_Ar = city.CityName_Ar,
-                Name_En = city.CityName_En,
-                Name_Ku = city.CityName_Ku,
-                CityImageUrl = city.CityImageUrl,
-                //Properties = city.Properties.Select(p => new PropertyDto
-                //{
-                //    Id = p.Id,
-                //    Name_Ar = p.Name_Ar,
-                //    Name_En = p.Name_En,
-                //    Name_Ku = p.Name_Ku,
-                //    // Add other property fields as needed
-                //}).ToList()
-            })
-            .ToListAsync();
-    }
+        var city = _mapper.Map<City>(cityDto);
 
+        city.Id = Guid.NewGuid();
 
-    public async Task<RsponseCityDto> GetCityByIdAsync(int id)
-    {
-        var city = await _context.Cities
-            .Include(c => c.Properties)
-            .FirstOrDefaultAsync(c => c.Id == id);
-
-        if (city == null)
-        {
-            return null;
-        }
-
-        return new RsponseCityDto
-        {
-            Id = city.Id,
-            Name_Ar = city.CityName_Ar,
-            Name_En = city.CityName_En,
-            Name_Ku = city.CityName_Ku,
-            CityImageUrl = city.CityImageUrl,
-            //Properties = city.Properties.Select(p => new PropertyDto
-            //{
-            //    Id = p.Id,
-            //    Name_Ar = p.Name_Ar,
-            //    Name_En = p.Name_En,
-            //    Name_Ku = p.Name_Ku,
-            //    // Add other property fields as needed
-            //}).ToList()
-        };
-    }
-
-    public async Task<City> AddCityAsync(CreateCityDto cityDto)
-    {
-        var city = new Models.City
-        {
-            CityName_Ar = cityDto.Name_Ar,
-            CityName_En = cityDto.Name_En,
-            CityName_Ku = cityDto.Name_Ku,
-            CityImageUrl = "/Soon/Soon",
-        };
+        city.ImageUrl = "Soon/Soon";
 
         _context.Cities.Add(city);
+
         await _context.SaveChangesAsync();
-        return city;
+
+        return _mapper.Map<ResponseCityDto>(city);
+
     }
 
-    public async Task UpdateCityAsync(int id, UpdateCityDto cityDto)
+    public async Task<IEnumerable<ResponseCityDto>> GetAllCitiesAsync()
+    {
+        var cities = await _context.Cities.ToListAsync();
+        return _mapper.Map<IEnumerable<ResponseCityDto>>(cities);
+    }
+
+    public async Task<ResponseCityDto> GetCityByIdAsync(Guid id)
+    {
+        var city = await _context.Cities.FindAsync(id);
+        if (city == null)
+        {
+            throw new Exception("City not found");
+        }
+        return _mapper.Map<ResponseCityDto>(city);
+    }
+
+    public async Task UpdateCityAsync(Guid id, UpdateCityDto cityDto)
     {
         var city = await _context.Cities.FindAsync(id);
         if (city == null)
@@ -93,23 +60,27 @@ public class CityService : ICityService
             throw new Exception("City not found");
         }
 
-        city.CityName_Ar = cityDto.Name_Ar;
-        city.CityName_En = cityDto.Name_En;
-        city.CityName_Ku = cityDto.Name_Ku;
-        
-
+        _mapper.Map(cityDto, city);
         _context.Cities.Update(city);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteCityAsync(int id)
+    public async Task DeleteCityAsync(Guid id)
     {
-        var city = await _context.Cities.FindAsync(id);
-        if (city != null)
+        var city = await _context.Cities.Include(c => c.Properties).FirstOrDefaultAsync(c => c.Id == id);
+        if (city == null)
         {
-            _context.Cities.Remove(city);
-            await _context.SaveChangesAsync();
+            throw new Exception("City not found");
         }
+
+        if (city.Properties.Any())
+        {
+            throw new Exception("Cannot delete city with associated properties");
+        }
+
+        _context.Cities.Remove(city);
+        await _context.SaveChangesAsync();
     }
 }
+
 

@@ -9,7 +9,7 @@ namespace JWT53.Controllers.Buyer
 {
 
    
-    [Authorize]
+  //  [Authorize]
     [Route("api/")]
     [ApiController]
     public class BuyerController : ControllerBase

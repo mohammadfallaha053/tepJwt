@@ -2,10 +2,12 @@
 using JWT53.Services.Cities;
 using JWT53.Dto.City;
 using Microsoft.AspNetCore.Authorization;
+using JWT53.Services.Citeis;
 namespace JWT53.Controllers.City;
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("api/[controller]")]
+
 public class CityController : ControllerBase
 {
     private readonly ICityService _cityService;
@@ -15,46 +17,63 @@ public class CityController : ControllerBase
         _cityService = cityService;
     }
 
-    [HttpGet("getAll")]
-    public async Task<IActionResult> GetAllCities()
-    {
-        var cities = await _cityService.GetAllCitiesAsync();
-        return Ok(cities);
-    }
-
-    [HttpGet("getById/{id}")]
-    public async Task<IActionResult> GetCityById(int id)
-    {
-        var city = await _cityService.GetCityByIdAsync(id);
-        if (city == null)
-        {
-            return NotFound();
-        }
-        return Ok(city);
-    }
-
-
     [HttpPost("add")]
     public async Task<IActionResult> AddCity([FromBody] CreateCityDto cityDto)
     {
-        var NewCity= await _cityService.AddCityAsync(cityDto);
-        return Ok(NewCity);
+        return Ok(await _cityService.AddCityAsync(cityDto));
     }
 
-    [HttpPut("edit/{id}")]
-    public async Task<IActionResult> UpdateCity(int id, [FromBody] UpdateCityDto cityDto)
-    {
-        
 
-        await _cityService.UpdateCityAsync(id, cityDto);
-        return Ok("Successfully updated");
+
+    [HttpGet("getAll")]
+    public async Task<IActionResult> GetAllCities()
+    {
+       
+        return Ok(await _cityService.GetAllCitiesAsync());
+    }
+
+
+
+    [HttpGet("getById/{id}")]
+    public async Task<IActionResult> GetCityById(Guid id)
+    {
+        try
+        {
+            return Ok(await _cityService.GetCityByIdAsync(id));
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+
+    [HttpPut("edit/{id}")]
+    public async Task<IActionResult> UpdateCity(Guid id, [FromBody] UpdateCityDto cityDto)
+    {
+        try
+        {
+            await _cityService.UpdateCityAsync(id, cityDto);
+            return Ok("City updated successfully");
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpDelete("delete/{id}")]
-    public async Task<IActionResult> DeleteCity(int id)
+    public async Task<IActionResult> DeleteCity(Guid id)
     {
-        await _cityService.DeleteCityAsync(id);
-        return NoContent();
+        try
+        {
+            await _cityService.DeleteCityAsync(id);
+            return Ok("City deleted successfully");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }
 

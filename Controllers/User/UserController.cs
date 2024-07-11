@@ -85,7 +85,7 @@ namespace JWT53.Controllers.User
         }
 
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("user/update-user/{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto model)
         {
@@ -111,7 +111,7 @@ namespace JWT53.Controllers.User
 
 
 
-        [Authorize]
+       // [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
         {

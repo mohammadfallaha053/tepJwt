@@ -1,7 +1,10 @@
-﻿using JWT53.Data;
+﻿using AutoMapper;
+using JWT53.Data;
+using JWT53.Dto.Category;
 using JWT53.Dto.Category;
 using JWT53.Dto.Property;
 using JWT53.Models;
+using JWT53.Services.Categories;
 using Microsoft.EntityFrameworkCore;
 
 namespace JWT53.Services.Categories;
@@ -9,110 +12,76 @@ namespace JWT53.Services.Categories;
 public class CategoryService : ICategoryService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CategoryService(ApplicationDbContext context)
+    public CategoryService(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
+    public async Task<ResponseCategoryDto> AddCategoryAsync(CreateCategoryDto CategoryDto)
+    {
+
+       
+        var Category = _mapper.Map<Category>(CategoryDto);
+        Category.Id = Guid.NewGuid();
+        Category.ImageUrl = "Soon/Soon";
+        _context.Categories.Add(Category);
+        await _context.SaveChangesAsync();
 
 
+        return _mapper.Map<ResponseCategoryDto>(Category);
+
+    }
 
     public async Task<IEnumerable<ResponseCategoryDto>> GetAllCategoriesAsync()
     {
-        return await _context.Categories
-            .Select(category => new ResponseCategoryDto
-            {
-                Id = category.Id,
-                Name_Ar = category.CategoryName_Ar,
-                Name_En = category.CategoryName_En,
-                Name_Ku = category.CategoryName_Ku,
-                CategoryIconUrl = category.CategoryIconUrl,
-                //Properties = category.Properties.Select(p => new PropertyDto
-                //{
-                //    Id = p.Id,
-                //    Name_Ar = p.Name_Ar,
-                //    Name_En = p.Name_En,
-                //    Name_Ku = p.Name_Ku,
-                //}).ToList()
-            })
-            .ToListAsync();
+        var Categories = await _context.Categories.ToListAsync();
+        return _mapper.Map<IEnumerable<ResponseCategoryDto>>(Categories);
     }
 
 
-
-    public async Task<Category> AddCategoryAsync(CreateCategoryDto categoryDto)
+    public async Task<ResponseCategoryDto> GetCategoryByIdAsync(Guid id)
     {
-        var category = new Category
+        var Category = await _context.Categories.FindAsync(id);
+        if (Category == null)
         {
-            CategoryName_Ar = categoryDto.Name_Ar,
-            CategoryName_En = categoryDto.Name_En,
-            CategoryName_Ku = categoryDto.Name_Ku,
-            CategoryIconUrl = "/Soon/Soon"
-        };
-
-        _context.Categories.Add(category);
-        await _context.SaveChangesAsync();
-
-        return category;
-    }
-
-
-    public async Task<ResponseCategoryDto> GetCategoryByIdAsync(int id)
-    {
-        var category = await _context.Categories
-            .Include(c => c.Properties)
-            .FirstOrDefaultAsync(c => c.Id == id);
-
-        if (category == null)
-        {
-            return null;
+            throw new Exception("Category not found");
         }
-
-        return new ResponseCategoryDto
-        {
-            Id = category.Id,
-            Name_Ar = category.CategoryName_Ar,
-            Name_En = category.CategoryName_En,
-            Name_Ku = category.CategoryName_Ku,
-            CategoryIconUrl = category.CategoryIconUrl,
-            //Properties = category.Properties.Select(p => new PropertyDto
-            //{
-            //    Id = p.Id,
-            //    Name_Ar = p.Name_Ar,
-            //    Name_En = p.Name_En,
-            //    Name_Ku = p.Name_Ku,
-            //}).ToList()
-        };
+        return _mapper.Map<ResponseCategoryDto>(Category);
     }
 
 
-    public async Task UpdateCategoryAsync(int id, UpdateCategoryDto categoryDto)
+    public async Task UpdateCategoryAsync(Guid id, UpdateCategoryDto CategoryDto)
     {
-        var category = await _context.Categories.FindAsync(id);
-        if (category == null)
+        var Category = await _context.Categories.FindAsync(id);
+        if (Category == null)
         {
             throw new Exception("Category not found");
         }
 
-        category.CategoryName_Ar = categoryDto.Name_Ar;
-        category.CategoryName_En = categoryDto.Name_En;
-        category.CategoryName_Ku = categoryDto.Name_Ku;
-       // category.CategoryIconUrl = categoryDto.CategoryIconUrl;
-
-        _context.Categories.Update(category);
+        _mapper.Map(CategoryDto, Category);
+        _context.Categories.Update(Category);
         await _context.SaveChangesAsync();
     }
 
 
-    public async Task DeleteCategoryAsync(int id)
+    public async Task DeleteCategoryAsync(Guid id)
     {
-        var category = await _context.Categories.FindAsync(id);
-        if (category != null)
+        var Category = await _context.Categories.Include(c => c.Properties).FirstOrDefaultAsync(c => c.Id == id);
+        if (Category == null)
         {
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
+            throw new Exception("Category not found");
         }
+
+        if (Category.Properties.Any())
+        {
+            throw new Exception("Cannot delete Category with associated properties");
+        }
+
+        _context.Categories.Remove(Category);
+        await _context.SaveChangesAsync();
     }
 }
 

@@ -1,4 +1,6 @@
-﻿namespace JWT53.Dto.Property;
+﻿using JWT53.Enum;
+
+namespace JWT53.Dto.Property;
 
 public class BasePropertyDto
 {
@@ -14,10 +16,13 @@ public class BasePropertyDto
     public decimal Price { get; set; }
     public decimal DiscountedPrice { get; set; }
 
+    public PropertyType PropertyType { get; set; } // تحديث إلى enum
+
     public Double Lat { get; set; }
 
     public Double Long { get; set; }
 
     public string StreetName { get; set; }
+
 
 }

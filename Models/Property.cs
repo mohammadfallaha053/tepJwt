@@ -4,7 +4,7 @@ namespace JWT53.Models;
 
 public class Property
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name_Ar { get; set; }
     public string Name_En { get; set; }
     public string Name_Ku { get; set; }
@@ -29,14 +29,14 @@ public class Property
 
 
     // Foreign keys
-    public int CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
     public Category Category { get; set; }
 
-    public int CityId { get; set; }
+    public Guid CityId { get; set; }
     public City City { get; set; }
 
 
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
     public ApplicationUser User { get; set; }
 
 

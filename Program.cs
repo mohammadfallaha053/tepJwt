@@ -64,9 +64,11 @@ op.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     Title = "Web053",
     Contact = new Microsoft.OpenApi.Models.OpenApiContact
     {
-        Name = "Mohammad Fallaha",
-        Email = "mohammadfallaha053@gmail.com"
-    }
+        Name = "Mohammad Fallaha  +963 956 661 418",
+        Email = "mohammadfallaha053@gmail.com",
+   
+    },
+
 });
 
 op.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -156,6 +158,7 @@ builder.Services.AddAuthorization();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 

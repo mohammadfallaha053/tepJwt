@@ -71,12 +71,12 @@ public class SellerService : ISellerService
                 IsShowInMainPage = p.IsShowInMainPage,
                 IsShowInAdPage = p.IsShowInAdPage,
                 PropertyType = p.PropertyType,
-                CategoryName_Ar = p.Category.CategoryName_Ar,
-                CategoryName_En = p.Category.CategoryName_En,
-                CategoryName_Ku = p.Category.CategoryName_Ku,
-                CityName_Ar = p.City.CityName_Ar,
-                CityName_En = p.City.CityName_En,
-                CityName_Ku = p.City.CityName_Ku,
+                CategoryName_Ar = p.Category.Name_Ar,
+                CategoryName_En = p.Category.Name_En,
+                CategoryName_Ku = p.Category.Name_Ku,
+                CityName_Ar = p.City.Name_Ar,
+                CityName_En = p.City.Name_En,
+                CityName_Ku = p.City.Name_Ku,
                 Files = p.Files.Select(f => new MyFileDto
                 {
                     FileName = f.FileName,

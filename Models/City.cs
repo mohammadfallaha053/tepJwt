@@ -2,11 +2,11 @@
 {
     public class City
     {
-        public int Id { get; set; }
-        public string CityName_Ar { get; set; }
-        public string CityName_En { get; set; }
-        public string CityName_Ku { get; set; }
-        public string CityImageUrl { get; set; }
+        public Guid Id { get; set; }
+        public string  Name_Ar { get; set; }
+        public string  Name_En { get; set; }
+        public string  Name_Ku { get; set; }
+        public string  ImageUrl { get; set; }
 
         // Navigation property
         public ICollection<Property> Properties { get; set; }

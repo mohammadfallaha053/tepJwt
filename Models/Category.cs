@@ -2,11 +2,11 @@
 {
     public class Category
     {
-        public int Id { get; set; }
-        public string CategoryName_Ar { get; set; }
-        public string CategoryName_En { get; set; }
-        public string CategoryName_Ku { get; set; }
-        public string CategoryIconUrl { get; set; }
+        public Guid Id { get; set; }
+        public string Name_Ar { get; set; }
+        public string Name_En { get; set; }
+        public string Name_Ku { get; set; }
+        public string ImageUrl { get; set; }
 
         // Navigation property
         public ICollection<Property> Properties { get; set; }

@@ -8,7 +8,7 @@ using JWT53.Services.Property;
 using JWT53.Dto.Property;
 namespace JWT53.Controllers.Property;
 
-[Authorize]
+//[Authorize]
 [Route("api/")]
 [ApiController]
 
@@ -26,7 +26,7 @@ public class PropertyController : ControllerBase
    
 
     [HttpGet("Property/getById/{id}")]
-    public async Task<ActionResult<ResponsePropertyDto>> GetPropertyById(int id)
+    public async Task<ActionResult<ResponsePropertyDto>> GetPropertyById(Guid id)
     {
         var property = await _propertyService.GetPropertyByIdAsync(id);
         if (property == null)
@@ -57,7 +57,7 @@ public class PropertyController : ControllerBase
 
 
     [HttpPut("edit/{id}")]
-    public async Task<IActionResult> UpdateProperty(int id, [FromBody] UpdatePropertyDto dto)
+    public async Task<IActionResult> UpdateProperty(Guid id, [FromBody] UpdatePropertyDto dto)
     {
         try
         {
@@ -72,7 +72,7 @@ public class PropertyController : ControllerBase
 
 
     [HttpDelete("Property/delete/{id}")]
-    public async Task<IActionResult> DeleteProperty(int id)
+    public async Task<IActionResult> DeleteProperty(Guid id)
     {
         await _propertyService.DeletePropertyAsync(id);
         return NoContent();

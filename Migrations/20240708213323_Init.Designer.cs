@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JWT53.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240706121250_addLatLong")]
-    partial class addLatLong
+    [Migration("20240708213323_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,25 +100,24 @@ namespace JWT53.Migrations
 
             modelBuilder.Entity("JWT53.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CategoryIconUrl")
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CategoryName_Ar")
+                    b.Property<string>("Name_Ar")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CategoryName_En")
+                    b.Property<string>("Name_En")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CategoryName_Ku")
+                    b.Property<string>("Name_Ku")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -129,25 +128,24 @@ namespace JWT53.Migrations
 
             modelBuilder.Entity("JWT53.Models.City", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CityImageUrl")
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CityName_Ar")
+                    b.Property<string>("Name_Ar")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CityName_En")
+                    b.Property<string>("Name_En")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CityName_Ku")
+                    b.Property<string>("Name_Ku")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -208,11 +206,11 @@ namespace JWT53.Migrations
                     b.Property<int>("Area")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CityId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description_Ar")
                         .IsRequired()
@@ -432,13 +430,13 @@ namespace JWT53.Migrations
                     b.HasOne("JWT53.Models.Category", "Category")
                         .WithMany("Properties")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JWT53.Models.City", "City")
                         .WithMany("Properties")
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("JWT53.Models.ApplicationUser", "User")

@@ -18,7 +18,7 @@ public class PropertyService : IPropertyService
         _context = context;
     }
 
-    public async Task AddPropertyAsync(CreatePropertyDto createPropertyDto, string userId)
+    public async Task AddPropertyAsync(CreatePropertyDto createPropertyDto, Guid userId)
     {
         var property = new Property
         {
@@ -49,7 +49,7 @@ public class PropertyService : IPropertyService
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeletePropertyAsync(int id)
+    public async Task DeletePropertyAsync(Guid id)
     {
         var property = await _context.Properties.FindAsync(id);
         if (property == null)
@@ -61,7 +61,7 @@ public class PropertyService : IPropertyService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ResponsePropertyDto> GetPropertyByIdAsync(int id)
+    public async Task<ResponsePropertyDto> GetPropertyByIdAsync(Guid id)
     {
         var property = await _context.Properties
             .Include(p => p.Category)
@@ -97,13 +97,13 @@ public class PropertyService : IPropertyService
             IsShowInAdPage = property.IsShowInAdPage,
             PropertyType = property.PropertyType, // تحديث إلى enum
             CategoryId = property.CategoryId,
-            CategoryName_Ar = property.Category.CategoryName_Ar,
-            CategoryName_En = property.Category.CategoryName_En,
-            CategoryName_Ku = property.Category.CategoryName_Ku,
+            CategoryName_Ar = property.Category.Name_Ar,
+            CategoryName_En = property.Category.Name_En,
+            CategoryName_Ku = property.Category.Name_Ku,
             CityId = property.CityId,
-            CityName_Ar = property.City.CityName_Ar,
-            CityName_En = property.City.CityName_En,
-            CityName_Ku = property.City.CityName_Ku,
+            CityName_Ar = property.City.Name_Ar,
+            CityName_En = property.City.Name_En,
+            CityName_Ku = property.City.Name_Ku,
             Files = property.Files.Select(f => new MyFileDto
             {
                 FilePath = f.FilePath,
@@ -144,20 +144,20 @@ public class PropertyService : IPropertyService
             IsShowInAdPage = property.IsShowInAdPage,
             PropertyType = property.PropertyType, // تحديث إلى enum
             CategoryId = property.CategoryId,
-            CategoryName_Ar = property.Category.CategoryName_Ar,
-            CategoryName_En = property.Category.CategoryName_En,
-            CategoryName_Ku = property.Category.CategoryName_Ku,
+            CategoryName_Ar = property.Category.Name_Ar,
+            CategoryName_En = property.Category.Name_En,
+            CategoryName_Ku = property.Category.Name_Ku,
             CityId = property.CityId,
-            CityName_Ar = property.City.CityName_Ar,
-            CityName_En = property.City.CityName_En,
-            CityName_Ku = property.City.CityName_Ku,
+            CityName_Ar = property.City.Name_Ar,
+            CityName_En = property.City.Name_En,
+            CityName_Ku = property.City.Name_Ku,
             UserFullName = property.User.FullName, // إضافة اسم المستخدم
             UserPhoneNumber = property.User.PhoneNumber // استخدام رقم هاتف المستخدم من IdentityUser
         });
     }
 
 
-    public async Task UpdatePropertyAsync(int propertyId, UpdatePropertyDto dto)
+    public async Task UpdatePropertyAsync(Guid propertyId, UpdatePropertyDto dto)
     {
         var property = await _context.Properties.FindAsync(propertyId);
         if (property == null)
