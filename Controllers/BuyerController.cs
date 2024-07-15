@@ -5,11 +5,11 @@ using JWT53.Models;
 using JWT53.Services.Admin;
 using System.ComponentModel.Design;
 using JWT53.Services.Buyer;
-namespace JWT53.Controllers.Buyer
+namespace JWT53.Controllers
 {
 
-   
-  //  [Authorize]
+
+    //  [Authorize]
     [Route("api/")]
     [ApiController]
     public class BuyerController : ControllerBase
@@ -24,12 +24,12 @@ namespace JWT53.Controllers.Buyer
 
 
 
-        [HttpGet("admin/get-all-buyers")]
-        public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetBuyer()
-        {
-            var usersInRole = await _adminService.GetUsersInRoleAsync("buyer");
-            return Ok(usersInRole);
-        }
+        //[HttpGet("admin/get-all-buyers")]
+        //public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetBuyer()
+        //{
+        //    var usersInRole = await _adminService.GetUsersInRoleAsync("buyer");
+        //    return Ok(usersInRole);
+        //}
 
 
 

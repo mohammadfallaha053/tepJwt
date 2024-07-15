@@ -10,6 +10,6 @@ public interface ICategoryService
     Task<IEnumerable<ResponseCategoryDto>> GetAllCategoriesAsync();
     Task<ResponseCategoryDto> GetCategoryByIdAsync(Guid id);
     Task<ResponseCategoryDto>AddCategoryAsync(CreateCategoryDto categoryDto);
-    Task UpdateCategoryAsync(Guid id, UpdateCategoryDto categoryDto);
+    Task<ResponseCategoryDto> UpdateCategoryAsync(Guid id, UpdateCategoryDto categoryDto);
     Task DeleteCategoryAsync(Guid id);
 }

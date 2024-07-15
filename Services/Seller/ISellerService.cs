@@ -6,6 +6,6 @@ namespace JWT53.Services.seller;
 
 public interface ISellerService
 {
-    Task<IEnumerable<UserDto>> GetAllSellersWithPropertyCountAsync();
-    Task<UserDto> GetSellerWithPropertiesAsync(string sellerId);
+    Task<IEnumerable<SellerDto>> GetAllSellersWithPropertyCountAsync();
+    Task<SellerDto> GetSellerWithPropertiesAsync(string sellerId);
 }

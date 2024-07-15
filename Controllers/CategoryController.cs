@@ -5,7 +5,7 @@ using JWT53.Services.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JWT53.Controllers.Category;
+namespace JWT53.Controllers;
 //[Authorize]
 [ApiController]
 [Route("api/[controller]")]
@@ -37,7 +37,7 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> GetCategoryById(Guid id)
     {
         try
-        { 
+        {
             return Ok(await _CategoryService.GetCategoryByIdAsync(id));
         }
 
@@ -53,8 +53,8 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            await _CategoryService.UpdateCategoryAsync(id, CategoryDto);
-            return Ok("Category updated successfully");
+            
+            return Ok(await _CategoryService.UpdateCategoryAsync(id, CategoryDto));
         }
         catch (Exception ex)
         {

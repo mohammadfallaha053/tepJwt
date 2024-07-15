@@ -1,12 +1,11 @@
-﻿
-using JWT53.Dto.Auth;
+﻿using JWT53.Dto.Auth;
 using JWT53.Models;
 using JWT53.Services.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JWT53.Controllers.Role;
+namespace JWT53.Controllers;
 
 //[Authorize(Roles = "admin")]
 [Route("api/admin")]
@@ -22,7 +21,7 @@ public class RoleController : ControllerBase
     }
 
 
-    
+
 
 
     [HttpGet("get-all-roles")]

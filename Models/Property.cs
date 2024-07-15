@@ -1,4 +1,4 @@
-﻿using JWT53.Enum;
+﻿using JWT53.Enum.Property;
 
 namespace JWT53.Models;
 
@@ -19,7 +19,12 @@ public class Property
     public bool IsActive { get; set; }=false;
     public bool IsShowInMainPage { get; set; } = false;
     public bool IsShowInAdPage { get; set; } = false;
-    public PropertyType PropertyType { get; set; } // تحديث إلى enum
+
+    public DateTime CreatedDate { get; set; }
+
+    public PropertyType PropertyType { get; set; } //  enum
+
+    public Status Status { get; set; } = Status.Available;//enum
 
     public Double Lat {  get; set; }
     
@@ -40,6 +45,12 @@ public class Property
     public ApplicationUser User { get; set; }
 
 
-    // Navigation property for files
+    // Navigation property for Many to Many
     public ICollection<MyFile> Files { get; set; }
+
+
+    public ICollection<PropertyAmenity> PropertyAmenities { get; set; }
+
+    public ICollection<PropertyLike> PropertyLikes { get; set; }
+
 }

@@ -16,7 +16,7 @@ public interface IUserService
 
 
 
-    Task<UserDto> UpdateUserProfileImageAsync(string userId, IFormFile file);
+    Task<SellerDto> UpdateUserProfileImageAsync(string userId, IFormFile file);
 
 
 

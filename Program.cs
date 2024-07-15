@@ -18,12 +18,15 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using JWT53;
 using JWT53.Services.seller;
-using JWT53.Services.Property;
+using JWT53.Services.Properties;
 using JWT53.Services.Buyer;
 using System.Text.Json.Serialization;
 using JWT53.Services.Categories;
 using JWT53.Services.Cities;
 using JWT53.Services.Citeis;
+using JWT53.Services.Amenities;
+using JWT53.Services.Properties.PropertiesAmenities;
+using JWT53.Services.Properties.PropertiesLikes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,13 +40,16 @@ builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICityService,CityService>();
+builder.Services.AddScoped<IAmenityService,AmenityService>();
+builder.Services.AddScoped<IPropertyAmenityService, PropertyAmenityService>();
+builder.Services.AddScoped<IPropertyLikeService, PropertyLikeService>();
 builder.Services.AddCors();
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+//builder.Services.AddControllers()
+//    .AddJsonOptions(options =>
+//    {
+//        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+//    });
 
 
 

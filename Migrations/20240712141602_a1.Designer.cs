@@ -4,6 +4,7 @@ using JWT53.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JWT53.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240712141602_a1")]
+    partial class a1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,29 +24,6 @@ namespace JWT53.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("JWT53.Models.Amenity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name_Ar")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name_En")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name_Ku")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Amenities");
-                });
 
             modelBuilder.Entity("JWT53.Models.ApplicationUser", b =>
                 {
@@ -315,36 +295,6 @@ namespace JWT53.Migrations
                     b.ToTable("Properties");
                 });
 
-            modelBuilder.Entity("JWT53.Models.PropertyAmenity", b =>
-                {
-                    b.Property<Guid>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AmenityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("PropertyId", "AmenityId");
-
-                    b.HasIndex("AmenityId");
-
-                    b.ToTable("PropertyAmenities");
-                });
-
-            modelBuilder.Entity("JWT53.Models.PropertyLike", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "PropertyId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("PropertyLikes");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -512,44 +462,6 @@ namespace JWT53.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("JWT53.Models.PropertyAmenity", b =>
-                {
-                    b.HasOne("JWT53.Models.Amenity", "Amenity")
-                        .WithMany("PropertyAmenities")
-                        .HasForeignKey("AmenityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JWT53.Models.Property", "Property")
-                        .WithMany("PropertyAmenities")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Amenity");
-
-                    b.Navigation("Property");
-                });
-
-            modelBuilder.Entity("JWT53.Models.PropertyLike", b =>
-                {
-                    b.HasOne("JWT53.Models.Property", "Property")
-                        .WithMany("PropertyLikes")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JWT53.Models.ApplicationUser", "User")
-                        .WithMany("PropertyLikes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Property");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -601,16 +513,9 @@ namespace JWT53.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("JWT53.Models.Amenity", b =>
-                {
-                    b.Navigation("PropertyAmenities");
-                });
-
             modelBuilder.Entity("JWT53.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Properties");
-
-                    b.Navigation("PropertyLikes");
                 });
 
             modelBuilder.Entity("JWT53.Models.Category", b =>
@@ -626,10 +531,6 @@ namespace JWT53.Migrations
             modelBuilder.Entity("JWT53.Models.Property", b =>
                 {
                     b.Navigation("Files");
-
-                    b.Navigation("PropertyAmenities");
-
-                    b.Navigation("PropertyLikes");
                 });
 #pragma warning restore 612, 618
         }

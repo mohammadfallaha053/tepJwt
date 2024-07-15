@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using JWT53.Dto.Amenity;
 using JWT53.Dto.Category;
 using JWT53.Dto.City;
 using JWT53.Models;
@@ -18,6 +19,11 @@ public class MappingProfile:Profile
         CreateMap<CreateCategoryDto, Category>();
         CreateMap<Category, ResponseCategoryDto>();
         CreateMap<UpdateCategoryDto, Category>();
+
+
+        CreateMap<CreateAmenityDto, Amenity>();
+        CreateMap<Amenity, ResponseAmenityDto>();
+        CreateMap<UpdateAmenityDto, Amenity>();
 
     }
 }

@@ -33,7 +33,7 @@ public class UserService: IUserService
 
    
 
-    public async Task<UserDto> UpdateUserProfileImageAsync(string userId, IFormFile file)
+    public async Task<SellerDto> UpdateUserProfileImageAsync(string userId, IFormFile file)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
@@ -70,7 +70,7 @@ public class UserService: IUserService
         user.ImageUrl = fileName;
         await _userManager.UpdateAsync(user);
 
-        return new UserDto
+        return new SellerDto
         {
             Id = user.Id,
             UserName = user.UserName,

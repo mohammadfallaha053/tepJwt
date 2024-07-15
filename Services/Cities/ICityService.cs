@@ -15,6 +15,6 @@ public interface ICityService
     Task<ResponseCityDto> AddCityAsync(CreateCityDto cityDto);
     Task<IEnumerable<ResponseCityDto>> GetAllCitiesAsync();
     Task<ResponseCityDto> GetCityByIdAsync(Guid id);
-    Task UpdateCityAsync(Guid id, UpdateCityDto cityDto);
+    Task<ResponseCityDto> UpdateCityAsync(Guid id, UpdateCityDto cityDto);
     Task DeleteCityAsync(Guid id);
 }

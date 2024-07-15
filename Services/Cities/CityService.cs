@@ -52,7 +52,7 @@ public class CityService : ICityService
         return _mapper.Map<ResponseCityDto>(city);
     }
 
-    public async Task UpdateCityAsync(Guid id, UpdateCityDto cityDto)
+    public async Task<ResponseCityDto> UpdateCityAsync(Guid id, UpdateCityDto cityDto)
     {
         var city = await _context.Cities.FindAsync(id);
         if (city == null)
@@ -63,6 +63,8 @@ public class CityService : ICityService
         _mapper.Map(cityDto, city);
         _context.Cities.Update(city);
         await _context.SaveChangesAsync();
+
+        return _mapper.Map<ResponseCityDto>(city);
     }
 
     public async Task DeleteCityAsync(Guid id)

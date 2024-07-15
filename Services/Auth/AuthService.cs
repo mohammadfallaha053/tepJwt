@@ -43,8 +43,13 @@ public class AuthService : IAuthService
             return new AuthDto { Message = "Username is already registered!" };
 
 
+         TimeZoneInfo damascusTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Syria Standard Time");
+         var date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, damascusTimeZone);
+      
         var user = new ApplicationUser
         {
+            
+            CreatedDate = date,
             UserName = model.Username,
             Email = model.Email,
             FullName = model.FullName,
@@ -86,6 +91,7 @@ public class AuthService : IAuthService
             Username = user.UserName,
             PhoneNumber = user.PhoneNumber,
             ImageUrl = user.ImageUrl,
+            CreatedDate=user.CreatedDate,
             
         };
     }

@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace JWT53.Controllers.User
+namespace JWT53.Controllers
 {
-  
+
     [Route("api/")]
     [ApiController]
     public class UserController : ControllerBase
@@ -19,17 +19,39 @@ namespace JWT53.Controllers.User
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
-       
 
-       
+
+
         public UserController(IUserService userService, UserManager<ApplicationUser> userManager)
         {
             _userService = userService;
             _userManager = userManager;
-           
+
         }
 
 
+        [Authorize]
+        [HttpGet("get-guid")]
+        public IActionResult GetUserGuid()
+        {
+            // استخراج معرف المستخدم (UserId) من التوكن
+            var userId = User.FindFirstValue("uid");
+
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(userId);
+
+            // تحويل معرف المستخدم إلى نوع Guid
+            if (Guid.TryParse(userId, out Guid userGuid))
+            {
+                return Ok(userGuid);
+            }
+
+            return BadRequest("Invalid User ID format.");
+        }
 
         //[Authorize]
         [HttpPost("user/{userId}/upload-image")]
@@ -61,7 +83,7 @@ namespace JWT53.Controllers.User
             try
             {
                 var count = await _userService.GetUsersCountByRoleAsync(roleName);
-                return Ok(new { roleName = roleName, count = count });
+                return Ok(new { roleName, count });
             }
             catch (Exception ex)
             {
@@ -95,8 +117,8 @@ namespace JWT53.Controllers.User
                 return NotFound();
             }
 
-            user.PhoneNumber=model.PhoneNumber;
-            user.FullName=model.FullName;
+            user.PhoneNumber = model.PhoneNumber;
+            user.FullName = model.FullName;
 
 
             var result = await _userManager.UpdateAsync(user);
@@ -111,7 +133,7 @@ namespace JWT53.Controllers.User
 
 
 
-       // [Authorize]
+        // [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
         {
@@ -158,7 +180,7 @@ namespace JWT53.Controllers.User
         }
 
 
-       
+
 
 
 
@@ -168,7 +190,9 @@ namespace JWT53.Controllers.User
         [HttpGet("test")]
         public async Task<IActionResult> Test()
         {
-            return Ok("ok");
+            TimeZoneInfo damascusTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Syria Standard Time");
+            var date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, damascusTimeZone);
+            return Ok(date);
         }
 
 

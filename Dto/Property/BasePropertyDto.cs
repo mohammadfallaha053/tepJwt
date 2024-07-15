@@ -1,9 +1,10 @@
-﻿using JWT53.Enum;
+﻿using JWT53.Enum.Property;
 
 namespace JWT53.Dto.Property;
 
 public class BasePropertyDto
 {
+    public Status Status { get; set; }
     public string Name_Ar { get; set; }
     public string Name_En { get; set; }
     public string Name_Ku { get; set; }
@@ -24,10 +25,6 @@ public class BasePropertyDto
 
     public string StreetName { get; set; }
 
-    public string UserId { get; set; }
-
-    public Guid CategoryId { get; set; }
-
-    public Guid CityId { get; set; }
+    
 
 }

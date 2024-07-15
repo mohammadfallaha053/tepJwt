@@ -53,7 +53,7 @@ public class CategoryService : ICategoryService
     }
 
 
-    public async Task UpdateCategoryAsync(Guid id, UpdateCategoryDto CategoryDto)
+    public async Task<ResponseCategoryDto> UpdateCategoryAsync(Guid id, UpdateCategoryDto CategoryDto)
     {
         var Category = await _context.Categories.FindAsync(id);
         if (Category == null)
@@ -64,6 +64,9 @@ public class CategoryService : ICategoryService
         _mapper.Map(CategoryDto, Category);
         _context.Categories.Update(Category);
         await _context.SaveChangesAsync();
+
+        return _mapper.Map<ResponseCategoryDto>(Category);
+
     }
 
 

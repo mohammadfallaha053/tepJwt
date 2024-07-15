@@ -3,7 +3,7 @@ using JWT53.Services.Cities;
 using JWT53.Dto.City;
 using Microsoft.AspNetCore.Authorization;
 using JWT53.Services.Citeis;
-namespace JWT53.Controllers.City;
+namespace JWT53.Controllers;
 //[Authorize]
 [ApiController]
 [Route("api/[controller]")]
@@ -28,7 +28,7 @@ public class CityController : ControllerBase
     [HttpGet("getAll")]
     public async Task<IActionResult> GetAllCities()
     {
-       
+
         return Ok(await _cityService.GetAllCitiesAsync());
     }
 
@@ -53,14 +53,15 @@ public class CityController : ControllerBase
     {
         try
         {
-            await _cityService.UpdateCityAsync(id, cityDto);
-            return Ok("City updated successfully");
+           
+            return Ok (await _cityService.UpdateCityAsync(id, cityDto));
         }
         catch (Exception ex)
         {
             return NotFound(ex.Message);
         }
     }
+
 
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> DeleteCity(Guid id)

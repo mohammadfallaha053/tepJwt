@@ -3,7 +3,7 @@ using JWT53.Services.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JWT53.Controllers.Auth
+namespace JWT53.Controllers
 {
     [Route("api/auth")]
     [ApiController]

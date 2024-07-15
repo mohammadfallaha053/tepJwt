@@ -5,7 +5,7 @@ using JWT53.Services.Admin;
 using JWT53.Models;
 using JWT53.Services.seller;
 
-namespace JWT53.Controllers.Seller;
+namespace JWT53.Controllers;
 
 
 [Route("api/")]
